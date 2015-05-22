@@ -12,6 +12,9 @@ var Enemy = function (sprite) {
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
+var enemy1 = new Enemy("enemy-bug.png");
+var allEnemies = [enemy1];
+
 // Enemies our player must avoid
 // var Enemy = function() {
 //     // Variables applied to each of our instances go here,
