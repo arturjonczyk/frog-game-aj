@@ -18,10 +18,15 @@ var Player = function (sprite) {
 };
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
+Player.prototype.update = function () {
+    //
+};
 
 
 var enemy1 = new Enemy("enemy-bug.png");
 var allEnemies = [enemy1];
+
+var player = new Player("char-boy.png");
 
 // Enemies our player must avoid
 // var Enemy = function() {
