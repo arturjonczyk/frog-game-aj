@@ -1,6 +1,9 @@
 var Sprite = function (image) {
     this.sprite = 'images/' + image;
 };
+Sprite.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 // Enemies our player must avoid
 var Enemy = function() {
