@@ -12,6 +12,14 @@ var Enemy = function (sprite) {
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
+/*** PLAYER ***/
+var Player = function (sprite) {
+    Sprite.call(this, sprite);
+};
+Player.prototype = Object.create(Sprite.prototype);
+Player.prototype.constructor = Player;
+
+
 var enemy1 = new Enemy("enemy-bug.png");
 var allEnemies = [enemy1];
 
