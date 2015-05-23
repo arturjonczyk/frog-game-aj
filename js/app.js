@@ -5,30 +5,32 @@ var Sprite = function (sprite) {
 };
 Sprite.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+Sprite.prototype.initStartPosition = function (x, y) {
+    this.x = x || 0;
+    this.y = y || 0;
+}
 };
 /*** ENEMY ***/
 var Enemy = function (sprite) {
     Sprite.call(this, sprite);
 
-    var positionInit = {x: 0, y: this.startPosition()};
-    this.x = positionInit.x;
-    this.y = positionInit.y;
+    this.initStartPosition();
     this.enemySpeed = this.randomSpeed();
     this.pos = {};
 };
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
-Enemy.prototype.startPosition = function () {
+Enemy.prototype.initStartPosition = function () {
     var rowNum = Math.floor(Math.random() * 3);
-    return [62, 145, 227][rowNum];
+    this.x = -101;
+    this.y = [62, 145, 227][rowNum];
 };
 Enemy.prototype.randomSpeed = function () {
     return Math.floor(Math.random() * (30 - 10)) + 10;
 };
 Enemy.prototype.update = function(dt) {
     if (this.x > 500) {
-        this.x = -101;
-        this.y = this.startPosition();
+        this.initStartPosition();
         this.enemySpeed = this.randomSpeed();
     } else {
         this.x += this.enemySpeed * dt;
@@ -43,9 +45,7 @@ Enemy.prototype.update = function(dt) {
 var Player = function (sprite) {
     Sprite.call(this, sprite);
 
-    var positionInit = {x: 200, y: 386};
-    this.x = positionInit.x;
-    this.y = positionInit.y;
+    this.initStartPosition();
 
     this.pos = {
         "top": 0,
@@ -56,13 +56,16 @@ var Player = function (sprite) {
 };
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
+Player.prototype.initStartPosition = function () {
+    this.x = 200;
+    this.y = 386;
+};
 Player.prototype.update = function () {
     if (this.y < 0) {
         // add one point
         console.log("One Point for Player Artur");
         // return to initial position;
-        this.x = 200;
-        this.y = 386;
+        this.initStartPosition();
     }
     this.pos.top = this.y;
     this.pos.bottom = this.y + 78; // 101 height of sprite

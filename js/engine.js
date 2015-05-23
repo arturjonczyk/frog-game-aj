@@ -94,8 +94,7 @@ var Engine = (function(global) {
             enemy.update(dt);
             if (checkCollisions(player, enemy)) {
                 console.log('collision');
-                player.x = 200;
-                player.y = 386;
+                player.initStartPosition();
             }
         });
         player.update();
