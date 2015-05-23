@@ -8,9 +8,17 @@ Sprite.prototype.render = function () {
 /*** ENEMY ***/
 var Enemy = function (sprite) {
     Sprite.call(this, sprite);
+
+    var positionInit = {x: 0, y: this.startPosition()};
+    this.x = positionInit.x;
+    this.y = positionInit.y;
 };
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
+Enemy.prototype.startPosition = function () {
+    var rowNum = Math.floor(Math.random() * 3);
+    return [62, 145, 227][rowNum];
+};
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
