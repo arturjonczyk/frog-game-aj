@@ -28,8 +28,10 @@ var Enemy = function (sprite) {
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
-Enemy.prototype.randomSpeed = function () {
-    return Math.floor(Math.random() * (30 - 10)) + 10;
+Enemy.prototype.randomSpeed = function (max, min) {
+    max = max || 300;
+    min = min || 100;
+    return Math.floor(Math.random() * (max - min)) + min;
 };
 Enemy.prototype.update = function(dt) {
     if (this.x > 500) {
@@ -95,7 +97,7 @@ function makeEnemy(n) {
     return a;
 }
 
-var allEnemies = makeEnemy();               // adding/init custom number of enemies
+var allEnemies = makeEnemy();               // adding/init custom number of enemies - default = 3
 var player = new Player("char-boy.png");    // init a Player
 
 /*** Utility function ***/
