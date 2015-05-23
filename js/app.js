@@ -44,7 +44,13 @@ var Player = function (sprite) {
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.update = function () {
-    //
+    if (this.y < 0) {
+        // add one point
+        console.log("One Point for Player Artur");
+        // return to initial position;
+        this.x = 200;
+        this.y = 386;
+    }
 };
 Player.prototype.handleInput = function (direction) {
     if (direction === "up" && this.y > 0) {
