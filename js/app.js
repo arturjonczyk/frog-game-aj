@@ -12,6 +12,7 @@ var Enemy = function (sprite) {
     var positionInit = {x: 0, y: this.startPosition()};
     this.x = positionInit.x;
     this.y = positionInit.y;
+    this.enemySpeed = this.randomSpeed();
 };
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -19,10 +20,17 @@ Enemy.prototype.startPosition = function () {
     var rowNum = Math.floor(Math.random() * 3);
     return [62, 145, 227][rowNum];
 };
+Enemy.prototype.randomSpeed = function () {
+    return Math.floor(Math.random() * (30 - 10)) + 10;
+};
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    if (this.x > 500) {
+        this.x = -101;
+        this.y = this.startPosition();
+        this.enemySpeed = this.randomSpeed();
+    } else {
+        this.x += this.enemySpeed * dt;
+    }
 };
 
 /*** PLAYER ***/
