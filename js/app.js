@@ -106,9 +106,13 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-function checkCollisions(p, e) {
-    return !(e.pos.left > p.pos.right ||
-        e.pos.right - 40 < p.pos.left ||
-        e.pos.top > p.pos.bottom ||
-        e.pos.bottom < p.pos.top);
+function checkCollisions() {
+    for (var i = 0; i < allEnemies.length; i++) {
+        if( !(allEnemies[i].pos.left > player.pos.right ||
+              allEnemies[i].pos.right - 40 < player.pos.left ||
+              allEnemies[i].pos.top > player.pos.bottom ||
+              allEnemies[i].pos.bottom < player.pos.top) ) {
+                  player.initStartPosition();
+              }
+    }
 }

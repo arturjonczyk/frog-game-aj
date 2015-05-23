@@ -80,6 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
+        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -92,10 +93,6 @@ var Engine = (function(global) {
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
-            if (checkCollisions(player, enemy)) {
-                console.log('collision');
-                player.initStartPosition();
-            }
         });
         player.update();
     }
