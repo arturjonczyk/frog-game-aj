@@ -1,6 +1,7 @@
 /*** SPRITE ***/
 var Sprite = function (sprite) {
     this.sprite = 'images/' + sprite;
+    this.spCoor = {top: 0, right: 0, bottom: 0, left: 0};
 };
 Sprite.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -13,6 +14,7 @@ var Enemy = function (sprite) {
     this.x = positionInit.x;
     this.y = positionInit.y;
     this.enemySpeed = this.randomSpeed();
+    this.pos = {};
 };
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -31,6 +33,10 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x += this.enemySpeed * dt;
     }
+    this.pos.top = this.y;
+    this.pos.bottom = this.y + 69; // 101 height of sprite
+    this.pos.right = this.x + 101;
+    this.pos.left = this.x;
 };
 
 /*** PLAYER ***/
@@ -40,6 +46,13 @@ var Player = function (sprite) {
     var positionInit = {x: 200, y: 386};
     this.x = positionInit.x;
     this.y = positionInit.y;
+
+    this.pos = {
+        "top": 0,
+        "bottom": 0,
+        "right": 0,
+        "left": 0
+    };
 };
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -51,6 +64,10 @@ Player.prototype.update = function () {
         this.x = 200;
         this.y = 386;
     }
+    this.pos.top = this.y;
+    this.pos.bottom = this.y + 78; // 101 height of sprite
+    this.pos.right = this.x + 67;
+    this.pos.left = this.x;
 };
 Player.prototype.handleInput = function (direction) {
     if (direction === "up" && this.y > 0) {
@@ -86,3 +103,9 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+function checkCollisions(p, e) {
+    return !(e.pos.left > p.pos.right ||
+        e.pos.right - 40 < p.pos.left ||
+        e.pos.top > p.pos.bottom ||
+        e.pos.bottom < p.pos.top);
+}
