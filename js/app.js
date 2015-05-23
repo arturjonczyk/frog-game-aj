@@ -21,13 +21,25 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function () {
     //
 };
+Player.prototype.handleInput = function () {
+    if (direction === "up" && this.y > 0) {
+        this.y -= 83;
+    } else if (direction === "down" && this.y < 363) {
+        this.y += 83;
+    } else if (direction === "right" && this.x < 400) {
+        this.x += 101;
+    } else if (direction === "left" && this.x > 0) {
+        this.x -= 101;
+    }
+};
 
-
+/*** Initiation Part ***/
 var enemy1 = new Enemy("enemy-bug.png");
 var allEnemies = [enemy1];
 
 var player = new Player("char-boy.png");
 
+/*** Utility function ***/
 // Enemies our player must avoid
 // var Enemy = function() {
 //     // Variables applied to each of our instances go here,
