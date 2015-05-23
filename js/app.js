@@ -1,7 +1,7 @@
 /*** SPRITE ***/
 var Sprite = function(sprite, width, height) {
     this.sprite = 'images/' + sprite;
-    this.spCoor = {
+    this.spritePoint = {
         top: 0,
         right: 0,
         bottom: 0,
@@ -15,10 +15,10 @@ Sprite.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 Sprite.prototype.updateSpriteCoor = function() {
-    this.pos.top = this.y;
-    this.pos.bottom = this.y + this.height; // 101 height of sprite
-    this.pos.right = this.x + this.width;
-    this.pos.left = this.x;
+    this.spritePoint.top = this.y;
+    this.spritePoint.bottom = this.y + this.height; // 101 height of sprite
+    this.spritePoint.right = this.x + this.width;
+    this.spritePoint.left = this.x;
 };
 Sprite.prototype.initStartPosition = function() {
     if (this.constructor === Enemy) {
@@ -37,7 +37,6 @@ var Enemy = function(sprite, width, height) {
 
     this.initStartPosition();
     this.enemySpeed = this.randomSpeed();
-    this.pos = {};
 };
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -62,13 +61,6 @@ var Player = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
     this.initStartPosition();
-
-    this.pos = {
-        "top": 0,
-        "bottom": 0,
-        "right": 0,
-        "left": 0
-    };
 };
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -132,10 +124,10 @@ document.addEventListener('keyup', function(e) {
 
 function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
-        if (!(allEnemies[i].pos.left + 15 > player.pos.right - 15 ||
-                allEnemies[i].pos.right - 15 < player.pos.left + 15 ||
-                allEnemies[i].pos.top + 50 > player.pos.bottom - 50 ||
-                allEnemies[i].pos.bottom - 50 < player.pos.top + 50)) {
+        if (!(allEnemies[i].spritePoint.left + 15 > player.spritePoint.right - 15 ||
+                allEnemies[i].spritePoint.right - 15 < player.spritePoint.left + 15 ||
+                allEnemies[i].spritePoint.top + 50 > player.spritePoint.bottom - 50 ||
+                allEnemies[i].spritePoint.bottom - 50 < player.spritePoint.top + 50)) {
             player.initStartPosition();
         }
     }
