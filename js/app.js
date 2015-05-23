@@ -22,7 +22,6 @@ var Enemy = function (sprite) {
     Sprite.call(this, sprite);
 
     this.initStartPosition();
-    console.log(this.constructor === Enemy);
     this.enemySpeed = this.randomSpeed();
     this.pos = {};
 };
@@ -50,7 +49,6 @@ var Player = function (sprite) {
     Sprite.call(this, sprite);
 
     this.initStartPosition();
-    console.log(this.constructor);
 
     this.pos = {
         "top": 0,
@@ -87,12 +85,18 @@ Player.prototype.handleInput = function (direction) {
 };
 
 /*** Initiation Part ***/
-var enemy1 = new Enemy("enemy-bug.png");
-var enemy2 = new Enemy("enemy-bug.png");
-var enemy3 = new Enemy("enemy-bug.png");
-var allEnemies = [enemy1, enemy2, enemy3];
+function makeEnemy(n) {
+    var a = [],
+        n = n || 3;
+    for(var i = 1; i <= n; i++) {
+        window['enemy' + i] = new Enemy("enemy-bug.png");
+        a.push(window['enemy' + i]);
+    }
+    return a;
+}
 
-var player = new Player("char-boy.png");
+var allEnemies = makeEnemy();               // adding/init custom number of enemies
+var player = new Player("char-boy.png");    // init a Player
 
 /*** Utility function ***/
 
