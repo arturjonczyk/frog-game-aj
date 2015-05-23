@@ -1,15 +1,29 @@
 /*** SPRITE ***/
-var Sprite = function (sprite) {
+var Sprite = function(sprite, width, height) {
     this.sprite = 'images/' + sprite;
-    this.spCoor = {top: 0, right: 0, bottom: 0, left: 0};
+    this.spCoor = {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+    };
+    this.width = width;
+    this.height = height;
+
 };
-Sprite.prototype.render = function () {
+Sprite.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-Sprite.prototype.initStartPosition = function () {
-    if(this.constructor === Enemy) {
+Sprite.prototype.updateSpriteCoor = function() {
+    this.pos.top = this.y;
+    this.pos.bottom = this.y + this.height; // 101 height of sprite
+    this.pos.right = this.x + this.width;
+    this.pos.left = this.x;
+};
+Sprite.prototype.initStartPosition = function() {
+    if (this.constructor === Enemy) {
         var rowNum = Math.floor(Math.random() * 3);
-        this.x = -101;
+        this.x = -this.width;
         this.y = [62, 145, 227][rowNum];
     } else if (this.constructor === Player) {
         this.x = 200;
@@ -18,8 +32,8 @@ Sprite.prototype.initStartPosition = function () {
 };
 
 /*** ENEMY ***/
-var Enemy = function (sprite) {
-    Sprite.call(this, sprite);
+var Enemy = function(sprite, width, height) {
+    Sprite.call(this, sprite, width, height);
 
     this.initStartPosition();
     this.enemySpeed = this.randomSpeed();
@@ -28,9 +42,9 @@ var Enemy = function (sprite) {
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
-Enemy.prototype.randomSpeed = function (max, min) {
-    max = max || 300;
-    min = min || 100;
+Enemy.prototype.randomSpeed = function(max, min) {
+    max = max || 30;
+    min = min || 10;
     return Math.floor(Math.random() * (max - min)) + min;
 };
 Enemy.prototype.update = function(dt) {
@@ -40,15 +54,12 @@ Enemy.prototype.update = function(dt) {
     } else {
         this.x += this.enemySpeed * dt;
     }
-    this.pos.top = this.y;
-    this.pos.bottom = this.y + 69; // 101 height of sprite
-    this.pos.right = this.x + 101;
-    this.pos.left = this.x;
+    this.updateSpriteCoor();
 };
 
 /*** PLAYER ***/
-var Player = function (sprite) {
-    Sprite.call(this, sprite);
+var Player = function(sprite, width, height) {
+    Sprite.call(this, sprite, width, height);
 
     this.initStartPosition();
 
@@ -62,19 +73,16 @@ var Player = function (sprite) {
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
 
-Player.prototype.update = function () {
+Player.prototype.update = function() {
     if (this.y < 0) {
         // add one point
         console.log("One Point for Player Artur");
         // return to initial position;
         this.initStartPosition();
     }
-    this.pos.top = this.y;
-    this.pos.bottom = this.y + 78; // 101 height of sprite
-    this.pos.right = this.x + 67;
-    this.pos.left = this.x;
+    this.updateSpriteCoor();
 };
-Player.prototype.handleInput = function (direction) {
+Player.prototype.handleInput = function(direction) {
     if (direction === "up" && this.y > 0) {
         this.y -= 83;
     } else if (direction === "down" && this.y < 363) {
@@ -87,18 +95,25 @@ Player.prototype.handleInput = function (direction) {
 };
 
 /*** Initiation Part ***/
-function makeEnemy(n) {
-    var a = [],
-        n = n || 3;
-    for(var i = 1; i <= n; i++) {
-        window['enemy' + i] = new Enemy("enemy-bug.png");
+var enemyImage = "enemy-bug.png",
+    enemyWidth = 101,
+    enemyHeight = 171;
+
+function makeEnemy(n, image, width, height) {
+    var a = [];
+    for (var i = 1; i <= n; i++) {
+        window['enemy' + i] = new Enemy(image, width, height);
         a.push(window['enemy' + i]);
     }
     return a;
 }
 
-var allEnemies = makeEnemy();               // adding/init custom number of enemies - default = 3
-var player = new Player("char-boy.png");    // init a Player
+var allEnemies = makeEnemy(3, enemyImage, enemyWidth, enemyHeight); // adding/init custom number of enemies - default = 3
+
+var playerImage = "char-boy.png",
+    playerWidth = 101,
+    playerHeight = 171;
+var player = new Player(playerImage, playerWidth, playerHeight); // init a Player
 
 /*** Utility function ***/
 
@@ -114,13 +129,14 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
 function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
-        if( !(allEnemies[i].pos.left > player.pos.right ||
-              allEnemies[i].pos.right - 40 < player.pos.left ||
-              allEnemies[i].pos.top > player.pos.bottom ||
-              allEnemies[i].pos.bottom < player.pos.top) ) {
-                  player.initStartPosition();
-              }
+        if (!(allEnemies[i].pos.left + 15 > player.pos.right - 15 ||
+                allEnemies[i].pos.right - 15 < player.pos.left + 15 ||
+                allEnemies[i].pos.top + 50 > player.pos.bottom - 50 ||
+                allEnemies[i].pos.bottom - 50 < player.pos.top + 50)) {
+            player.initStartPosition();
+        }
     }
 }
