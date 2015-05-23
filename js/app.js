@@ -30,7 +30,7 @@ Player.prototype.constructor = Player;
 Player.prototype.update = function () {
     //
 };
-Player.prototype.handleInput = function () {
+Player.prototype.handleInput = function (direction) {
     if (direction === "up" && this.y > 0) {
         this.y -= 83;
     } else if (direction === "down" && this.y < 363) {
