@@ -52,7 +52,9 @@ Player.prototype.handleInput = function (direction) {
 
 /*** Initiation Part ***/
 var enemy1 = new Enemy("enemy-bug.png");
-var allEnemies = [enemy1];
+var enemy2 = new Enemy("enemy-bug.png");
+var enemy3 = new Enemy("enemy-bug.png");
+var allEnemies = [enemy1, enemy2, enemy3];
 
 var player = new Player("char-boy.png");
 
