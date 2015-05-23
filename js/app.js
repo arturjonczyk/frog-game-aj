@@ -1,4 +1,6 @@
-/*** SPRITE ***/
+/*****************************************************/
+/******************  SPRITE CLASS   ******************/
+/*****************************************************/
 var Sprite = function(sprite, width, height) {
     this.sprite = 'images/' + sprite;
     this.spritePoint = {
@@ -11,6 +13,7 @@ var Sprite = function(sprite, width, height) {
     this.height = height;
 
 };
+/******************  SPRITE PROTOTYPE   ******************/
 Sprite.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -31,19 +34,23 @@ Sprite.prototype.initStartPosition = function() {
     }
 };
 
-/*** ENEMY ***/
+/*****************************************************/
+/******************  ENEMY CLASS   ******************/
+/*****************************************************/
 var Enemy = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
     this.initStartPosition();
     this.enemySpeed = this.randomSpeed();
 };
+
+/******************  ENEMY PROTOTYPE   ******************/
 Enemy.prototype = Object.create(Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.randomSpeed = function(max, min) {
-    max = max || 30;
-    min = min || 10;
+    max = max || 400;
+    min = min || 150;
     return Math.floor(Math.random() * (max - min)) + min;
 };
 Enemy.prototype.update = function(dt) {
@@ -56,12 +63,16 @@ Enemy.prototype.update = function(dt) {
     this.updateSpriteCoor();
 };
 
-/*** PLAYER ***/
+/*****************************************************/
+/******************  PLAYER CLASS   ******************/
+/*****************************************************/
 var Player = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
     this.initStartPosition();
 };
+
+/******************  PLAYER PROTOTYPE   ******************/
 Player.prototype = Object.create(Sprite.prototype);
 Player.prototype.constructor = Player;
 
@@ -86,10 +97,20 @@ Player.prototype.handleInput = function(direction) {
     }
 };
 
-/*** Initiation Part ***/
-var enemyImage = "enemy-bug.png",
-    enemyWidth = 101,
-    enemyHeight = 171;
+/******************************************************************/
+/*********************   UTILITY FUNCTIONS   ***********************/
+/******************************************************************/
+function checkCollisions() {
+    for (var i = 0; i < allEnemies.length; i++) {
+        if (!(allEnemies[i].spritePoint.left + 15 > player.spritePoint.right - 15 ||
+                allEnemies[i].spritePoint.right - 15 < player.spritePoint.left + 15 ||
+                allEnemies[i].spritePoint.top + 50 > player.spritePoint.bottom - 50 ||
+                allEnemies[i].spritePoint.bottom - 50 < player.spritePoint.top + 50)) {
+            player.initStartPosition();
+            console.log("Player killed");
+        }
+    }
+}
 
 function makeEnemy(n, image, width, height) {
     var a = [];
@@ -100,17 +121,24 @@ function makeEnemy(n, image, width, height) {
     return a;
 }
 
+/********************** Initiation Part *************************/
+/*** ENEMY INIT ***/
+var enemyImage = "enemy-bug.png",
+    enemyWidth = 101,
+    enemyHeight = 171;
+
 var allEnemies = makeEnemy(3, enemyImage, enemyWidth, enemyHeight); // adding/init custom number of enemies - default = 3
 
+/*** PLAYER INIT ***/
 var playerImage = "char-boy.png",
     playerWidth = 101,
     playerHeight = 171;
+
 var player = new Player(playerImage, playerWidth, playerHeight); // init a Player
 
-/*** Utility function ***/
-
-
-/*** EVENT LISTENER ***/
+/******************************************************************/
+/*********************   EVENT LISTENER  ***********************/
+/******************************************************************/
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -121,14 +149,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-function checkCollisions() {
-    for (var i = 0; i < allEnemies.length; i++) {
-        if (!(allEnemies[i].spritePoint.left + 15 > player.spritePoint.right - 15 ||
-                allEnemies[i].spritePoint.right - 15 < player.spritePoint.left + 15 ||
-                allEnemies[i].spritePoint.top + 50 > player.spritePoint.bottom - 50 ||
-                allEnemies[i].spritePoint.bottom - 50 < player.spritePoint.top + 50)) {
-            player.initStartPosition();
-        }
-    }
-}
