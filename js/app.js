@@ -95,7 +95,7 @@ Player.prototype.constructor = Player; // Update the constructor object
 Player.prototype.update = function() {
     if (this.y < 0) { // if the player reached the river
         // add one point - here we could add some point
-        console.log("One Point for Player Artur");
+        console.log('One Point for Player Artur');
         // return to initial position;
         this.initStartPosition(); // return to the player's starting point
     }
@@ -104,13 +104,13 @@ Player.prototype.update = function() {
 
 // Handle input method of the Person playing the game.
 Player.prototype.handleInput = function(direction) {
-    if (direction === "up" && this.y > 0) { // if press key up - 83px up
+    if (direction === 'up' && this.y > 0) { // if press key up - 83px up
         this.y -= 83;
-    } else if (direction === "down" && this.y < 363) { // if press key down - 83px down
+    } else if (direction === 'down' && this.y < 363) { // if press key down - 83px down
         this.y += 83;
-    } else if (direction === "right" && this.x < 400) { // if press key right - 101px right
+    } else if (direction === 'right' && this.x < 400) { // if press key right - 101px right
         this.x += this.width;
-    } else if (direction === "left" && this.x > 0) { // if press key up - 101px left
+    } else if (direction === 'left' && this.x > 0) { // if press key up - 101px left
         this.x -= this.width;
     }
 };
@@ -136,7 +136,6 @@ function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
         if (isCollision(allEnemies[i], player)) {
             player.initStartPosition();
-            console.log("Player killed");
         }
     }
 }
@@ -156,7 +155,7 @@ function makeEnemy(image, width, height, n) {
 /********************** Initiation Part *************************/
 /*** ENEMY INIT ***/
 // basic properties of enemy object.
-var enemyImage = "enemy-bug.png", // image of enemy
+var enemyImage = 'enemy-bug.png', // image of enemy
     enemyWidth = 101, // image width
     enemyHeight = 171, // image height
     numEnemy = 0; // custom numer of enemies
@@ -166,7 +165,7 @@ var allEnemies = makeEnemy(enemyImage, enemyWidth, enemyHeight, numEnemy); // ad
 
 /*** PLAYER INIT ***/
 // basic properties of player object.
-var playerImage = "char-boy.png", // image of player
+var playerImage = 'char-boy.png', // image of player
     playerWidth = 101, // image width
     playerHeight = 171; // image height
 
