@@ -120,17 +120,19 @@ Player.prototype.handleInput = function(direction) {
 /******************************************************************/
 // Check if objects touch each other - if "true" player obj. returning
 // to the initial position.(basic version)
-function isCollision() {
-    player.initStartPosition();
-    console.log("Player killed");
+function isCollision(enemy, player) {
+    return !(
+        enemy.spritePoint.left + 15 > player.spritePoint.right - 15 ||
+        enemy.spritePoint.right - 15 < player.spritePoint.left + 15 ||
+        enemy.spritePoint.top + 50 > player.spritePoint.bottom - 50 ||
+        enemy.spritePoint.bottom - 50 < player.spritePoint.top + 50
+    );
 }
 function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
-        if (!(allEnemies[i].spritePoint.left + 15 > player.spritePoint.right - 15 ||
-                allEnemies[i].spritePoint.right - 15 < player.spritePoint.left + 15 ||
-                allEnemies[i].spritePoint.top + 50 > player.spritePoint.bottom - 50 ||
-                allEnemies[i].spritePoint.bottom - 50 < player.spritePoint.top + 50)) {
-            isCollision();
+        if (isCollision(allEnemies[i], player)) {
+            player.initStartPosition();
+            console.log("Player killed");
         }
     }
 }
