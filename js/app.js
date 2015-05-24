@@ -1,6 +1,9 @@
 /*****************************************************/
 /******************  SPRITE CLASS   ******************/
 /*****************************************************/
+// Every Sprite has image, and dimensions of the image - width/height.
+// spritePoint we will use to update four image corners of our object,
+// we will use this dimensions with collision detection function.
 var Sprite = function(sprite, width, height) {
     this.sprite = 'images/' + sprite;
     this.spritePoint = {
@@ -13,16 +16,23 @@ var Sprite = function(sprite, width, height) {
     this.height = height;
 
 };
+
 /******************  SPRITE PROTOTYPE   ******************/
+// Render image of the object.
 Sprite.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-Sprite.prototype.updateSpriteCoor = function() {
+
+// Update position of the image/sprite object - for the collision purpose.
+Sprite.prototype.updateSpriteCorners = function() {
     this.spritePoint.top = this.y;
-    this.spritePoint.bottom = this.y + this.height; // 101 height of sprite
+    this.spritePoint.bottom = this.y + this.height;
     this.spritePoint.right = this.x + this.width;
     this.spritePoint.left = this.x;
 };
+
+// This method init the starting position of the object,
+// based of the object's constructor.
 Sprite.prototype.initStartPosition = function() {
     if (this.constructor === Enemy) {
         var rowNum = Math.floor(Math.random() * 3);
@@ -37,69 +47,79 @@ Sprite.prototype.initStartPosition = function() {
 /*****************************************************/
 /******************  ENEMY CLASS   ******************/
 /*****************************************************/
+// Enemy Class based on Sprite Class.
 var Enemy = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
-    this.initStartPosition();
-    this.enemySpeed = this.randomSpeed();
+    this.initStartPosition(); // initialize the starting position.
+    this.enemySpeed = this.randomSpeed(); // initialize random speed of enemy object
 };
 
 /******************  ENEMY PROTOTYPE   ******************/
-Enemy.prototype = Object.create(Sprite.prototype);
-Enemy.prototype.constructor = Enemy;
+Enemy.prototype = Object.create(Sprite.prototype); // Inherit from Sprite methods.
+Enemy.prototype.constructor = Enemy; // Update the constructor object
 
+// Random Speed init. based of max and min values.
 Enemy.prototype.randomSpeed = function(max, min) {
-    max = max || 400;
-    min = min || 150;
-    return Math.floor(Math.random() * (max - min)) + min;
+    max = max || 400; // default value of max. speed
+    min = min || 150; // default value of min. speed
+    return Math.floor(Math.random() * (max - min)) + min; // return the random speed of the enemy
 };
+
+// Updating position of the enemy object
 Enemy.prototype.update = function(dt) {
-    if (this.x > 500) {
-        this.initStartPosition();
-        this.enemySpeed = this.randomSpeed();
+    if (this.x > 500) { // if enemy reached end of the board
+        this.initStartPosition(); // start at the beginning of the board
+        this.enemySpeed = this.randomSpeed(); // change speed (random speed)
     } else {
-        this.x += this.enemySpeed * dt;
+        this.x += this.enemySpeed * dt; // move forward
     }
-    this.updateSpriteCoor();
+    this.updateSpriteCorners(); // update four corners of the sprite
 };
 
 /*****************************************************/
 /******************  PLAYER CLASS   ******************/
 /*****************************************************/
+// Player Class based on Sprite Class.
 var Player = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
-    this.initStartPosition();
+    this.initStartPosition(); // initialize the starting position.
 };
 
 /******************  PLAYER PROTOTYPE   ******************/
-Player.prototype = Object.create(Sprite.prototype);
-Player.prototype.constructor = Player;
+Player.prototype = Object.create(Sprite.prototype); // Inherit from Sprite methods.
+Player.prototype.constructor = Player; // Update the constructor object
 
+// Updating the position of the player
 Player.prototype.update = function() {
-    if (this.y < 0) {
-        // add one point
+    if (this.y < 0) { // if the player reached the river
+        // add one point - here we could add some point
         console.log("One Point for Player Artur");
         // return to initial position;
-        this.initStartPosition();
+        this.initStartPosition(); // return to the player's starting point
     }
-    this.updateSpriteCoor();
+    this.updateSpriteCorners(); // update four corners of the sprite
 };
+
+// Handle input method of the Person playing the game.
 Player.prototype.handleInput = function(direction) {
-    if (direction === "up" && this.y > 0) {
+    if (direction === "up" && this.y > 0) { // if press key up - 83px up
         this.y -= 83;
-    } else if (direction === "down" && this.y < 363) {
+    } else if (direction === "down" && this.y < 363) { // if press key down - 83px down
         this.y += 83;
-    } else if (direction === "right" && this.x < 400) {
-        this.x += 101;
-    } else if (direction === "left" && this.x > 0) {
-        this.x -= 101;
+    } else if (direction === "right" && this.x < 400) { // if press key right - 101px right
+        this.x += this.width;
+    } else if (direction === "left" && this.x > 0) { // if press key up - 101px left
+        this.x -= this.width;
     }
 };
 
 /******************************************************************/
 /*********************   UTILITY FUNCTIONS   ***********************/
 /******************************************************************/
+// Check if objects touch each other - if "true" player obj. returning
+// to the initial position.(basic version)
 function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
         if (!(allEnemies[i].spritePoint.left + 15 > player.spritePoint.right - 15 ||
@@ -112,28 +132,36 @@ function checkCollisions() {
     }
 }
 
-function makeEnemy(n, image, width, height) {
+// Make any number of enemies object,
+// with custom variable name.
+function makeEnemy(image, width, height, n) {
+    n = n || 3;
     var a = [];
     for (var i = 1; i <= n; i++) {
-        window['enemy' + i] = new Enemy(image, width, height);
-        a.push(window['enemy' + i]);
+        window['enemy' + i] = new Enemy(image, width, height); // make global var enemy[some nr] object
+        a.push(window['enemy' + i]); // add the new object to array
     }
-    return a;
+    return a; // return all object within an array
 }
 
 /********************** Initiation Part *************************/
 /*** ENEMY INIT ***/
-var enemyImage = "enemy-bug.png",
-    enemyWidth = 101,
-    enemyHeight = 171;
+// basic properties of enemy object.
+var enemyImage = "enemy-bug.png", // image of enemy
+    enemyWidth = 101, // image width
+    enemyHeight = 171, // image height
+    numEnemy = 0; // custom numer of enemies
 
-var allEnemies = makeEnemy(3, enemyImage, enemyWidth, enemyHeight); // adding/init custom number of enemies - default = 3
+// Init. n instances of Enemy Class.
+var allEnemies = makeEnemy(enemyImage, enemyWidth, enemyHeight, numEnemy); // adding/init custom number of enemies - default = 3
 
 /*** PLAYER INIT ***/
-var playerImage = "char-boy.png",
-    playerWidth = 101,
-    playerHeight = 171;
+// basic properties of player object.
+var playerImage = "char-boy.png", // image of player
+    playerWidth = 101, // image width
+    playerHeight = 171; // image height
 
+// Init. player instance of Player Class
 var player = new Player(playerImage, playerWidth, playerHeight); // init a Player
 
 /******************************************************************/
@@ -147,5 +175,7 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
+    // every time we press one of the keys above
+    // the handleInput mehtod fires.
     player.handleInput(allowedKeys[e.keyCode]);
 });
