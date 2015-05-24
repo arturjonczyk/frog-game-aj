@@ -120,6 +120,8 @@ Player.prototype.handleInput = function(direction) {
 /******************************************************************/
 // Check if objects touch each other - if "true" player obj. returning
 // to the initial position.(basic version)
+
+// returning true if collision happend
 function isCollision(enemy, player) {
     return !(
         enemy.spritePoint.left + 15 > player.spritePoint.right - 15 ||
@@ -128,6 +130,8 @@ function isCollision(enemy, player) {
         enemy.spritePoint.bottom - 50 < player.spritePoint.top + 50
     );
 }
+
+// checking if collision happend and restart game;
 function checkCollisions() {
     for (var i = 0; i < allEnemies.length; i++) {
         if (isCollision(allEnemies[i], player)) {
