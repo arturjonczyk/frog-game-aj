@@ -45,17 +45,17 @@ Sprite.prototype.initStartPosition = function() {
 };
 
 /*****************************************************/
-/******************  ENEMY CLASS   ******************/
+/******************  VEHICLE CLASS   ******************/
 /*****************************************************/
 // Vehicles Class based on Sprite Class.
 var Vehicles = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
     this.initStartPosition(); // initialize the starting position.
-    this.enemySpeed = this.randomSpeed(); // initialize random speed of enemy object
+    this.vehicleSpeed = this.randomSpeed(); // initialize random speed of enemy object
 };
 
-/******************  ENEMY PROTOTYPE   ******************/
+/******************  VEHICLE PROTOTYPE   ******************/
 Vehicles.prototype = Object.create(Sprite.prototype); // Inherit from Sprite methods.
 Vehicles.prototype.constructor = Vehicles; // Update the constructor object
 
@@ -70,9 +70,9 @@ Vehicles.prototype.randomSpeed = function(max, min) {
 Vehicles.prototype.update = function(dt) {
     if (this.x > 500) { // if enemy reached end of the board
         this.initStartPosition(); // start at the beginning of the board
-        this.enemySpeed = this.randomSpeed(); // change speed (random speed)
+        this.vehicleSpeed = this.randomSpeed(); // change speed (random speed)
     } else {
-        this.x += this.enemySpeed * dt; // move forward
+        this.x += this.vehicleSpeed * dt; // move forward
     }
     this.updateSpriteCorners(); // update four corners of the sprite
 };
@@ -153,7 +153,7 @@ function makeEnemy(image, width, height, n) {
 }
 
 /********************** Initiation Part *************************/
-/*** ENEMY INIT ***/
+/*** VEHICLE INIT ***/
 // basic properties of enemy object.
 var enemyImage = 'enemy-bug.png', // image of enemy
     enemyWidth = 101, // image width
