@@ -34,7 +34,7 @@ Sprite.prototype.updateSpriteCorners = function() {
 // This method init the starting position of the object,
 // based of the object's constructor.
 Sprite.prototype.initStartPosition = function() {
-    if (this.constructor === Enemy) {
+    if (this.constructor === Vehicles) {
         var rowNum = Math.floor(Math.random() * 3);
         this.x = -this.width;
         this.y = [62, 145, 227][rowNum];
@@ -47,8 +47,8 @@ Sprite.prototype.initStartPosition = function() {
 /*****************************************************/
 /******************  ENEMY CLASS   ******************/
 /*****************************************************/
-// Enemy Class based on Sprite Class.
-var Enemy = function(sprite, width, height) {
+// Vehicles Class based on Sprite Class.
+var Vehicles = function(sprite, width, height) {
     Sprite.call(this, sprite, width, height);
 
     this.initStartPosition(); // initialize the starting position.
@@ -56,18 +56,18 @@ var Enemy = function(sprite, width, height) {
 };
 
 /******************  ENEMY PROTOTYPE   ******************/
-Enemy.prototype = Object.create(Sprite.prototype); // Inherit from Sprite methods.
-Enemy.prototype.constructor = Enemy; // Update the constructor object
+Vehicles.prototype = Object.create(Sprite.prototype); // Inherit from Sprite methods.
+Vehicles.prototype.constructor = Vehicles; // Update the constructor object
 
 // Random Speed init. based of max and min values.
-Enemy.prototype.randomSpeed = function(max, min) {
+Vehicles.prototype.randomSpeed = function(max, min) {
     max = max || 400; // default value of max. speed
     min = min || 150; // default value of min. speed
     return Math.floor(Math.random() * (max - min)) + min; // return the random speed of the enemy
 };
 
 // Updating position of the enemy object
-Enemy.prototype.update = function(dt) {
+Vehicles.prototype.update = function(dt) {
     if (this.x > 500) { // if enemy reached end of the board
         this.initStartPosition(); // start at the beginning of the board
         this.enemySpeed = this.randomSpeed(); // change speed (random speed)
@@ -146,7 +146,7 @@ function makeEnemy(image, width, height, n) {
     n = n || 3;
     var a = [];
     for (var i = 1; i <= n; i++) {
-        window['enemy' + i] = new Enemy(image, width, height); // make global var enemy[some nr] object
+        window['enemy' + i] = new Vehicles(image, width, height); // make global var enemy[some nr] object
         a.push(window['enemy' + i]); // add the new object to array
     }
     return a; // return all object within an array
@@ -160,7 +160,7 @@ var enemyImage = 'enemy-bug.png', // image of enemy
     enemyHeight = 171, // image height
     numEnemy = 0; // custom numer of enemies
 
-// Init. n instances of Enemy Class.
+// Init. n instances of Vehicles Class.
 var allEnemies = makeEnemy(enemyImage, enemyWidth, enemyHeight, numEnemy); // adding/init custom number of enemies - default = 3
 
 /*** PLAYER INIT ***/
